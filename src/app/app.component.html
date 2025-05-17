@@ -1,1 +1,7 @@
-<img src="assets/18937-still.svg"/>
+<p>Welcome to Hanzi Practice Sheet generator</p>
+
+<div class="controls">
+  <input type="text" [(ngModel)]="inputText">
+  <input type="checkbox" [(ngModel)]="includeTranslation" >
+  <button (click)="generatePdf()">Generate</button>
+</div>
