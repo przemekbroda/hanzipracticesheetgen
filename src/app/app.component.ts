@@ -26,19 +26,19 @@ export class AppComponent {
   }
 
   generatePdf() {
-
-
     const pdf = pdfMake;
+    // const pdfFonts = require('vfs_fonts.js');
+    pdfMake.vfs = vfs;
 
 
-    pdf.fonts = {
-      Roboto: {
-        normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
-        bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
-        italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
-        bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
-      },
-    }
+    pdfMake.fonts = {
+      NotoSans: {
+        normal: 'NotoSansJP-Black.ttf',
+        bold: 'NotoSansJP-Bold.ttf',
+        italics: 'NotoSansJP-ExtraLight.ttf',
+        bolditalics: 'NotoSansJP-Light.ttf'
+      }
+    };
 
     const chars = Array.from(this.inputText())
       .filter(c => this.characterInfos().has(c))
@@ -96,6 +96,9 @@ export class AppComponent {
 
 
         pdf.createPdf({
+          defaultStyle: {
+            font: 'NotoSans'
+          },
           footer: {
             columns: [
               '',
