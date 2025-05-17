@@ -27,9 +27,7 @@ export class AppComponent {
 
   generatePdf() {
     const pdf = pdfMake;
-    // const pdfFonts = require('vfs_fonts.js');
     pdfMake.vfs = vfs;
-
 
     pdfMake.fonts = {
       NotoSans: {
