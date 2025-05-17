@@ -143,10 +143,6 @@ export class AppComponent {
           ]
         }).download('test.pdf');
       });
-
-
-
-
   }
 
   createCharacterTrainingSection(characterInfo: { strokesSvgs: string[], characterSvgBlack: string, characterSvgGray:string, characterInfo: CharacterInfo }): ContentTable {
