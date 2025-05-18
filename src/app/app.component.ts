@@ -18,6 +18,7 @@ import {FormsModule} from "@angular/forms";
 })
 export class AppComponent {
   inputText = signal('');
+  footerText = signal('');
   characterInfos!: Signal<Map<string, CharacterInfo>>
   trainingRows = signal(1);
 
@@ -100,9 +101,9 @@ export class AppComponent {
             columns: [
               '',
               {
-                text: 'Created by Przemek Broda',
-                alignment: 'right',
-                marginRight: 10
+                text: this.footerText(),
+                fontSize: 10,
+                alignment: 'center',
               }
             ]
           },
@@ -200,6 +201,7 @@ export class AppComponent {
                     {
                       text: `${characterInfo.characterInfo.pinyin.toString()}       ${characterInfo.characterInfo.definition}`,
                       colSpan: 15,
+                      fontSize: 10,
                       border: [false, false, false, false],
                     },
                     '',
