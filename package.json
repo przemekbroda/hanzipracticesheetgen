@@ -2,6 +2,8 @@
   "name": "hanzi-practice-sheet-gen",
   "version": "0.0.0",
   "main": "app.js",
+  "license": "MIT",
+  "author": "Przemek Broda",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +11,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "electron": "electron .",
-    "electron-build": "ng build && electron ."
+    "electron-build": "ng build && electron .",
+    "dist": "electron-builder"
   },
   "private": true,
   "dependencies": {
@@ -23,7 +26,6 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
-    "electron": "^36.2.1",
     "electron-packager": "^17.1.2",
     "pdfmake": "^0.2.20",
     "rxjs": "~7.8.0",
@@ -42,6 +44,18 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.2.2"
+    "typescript": "~5.2.2",
+    "electron": "^36.2.1",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.przemekbroda.app",
+    "productName": "Hanzi Practice Sheet Generator",
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": "portable"
+    }
   }
 }

@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 
 HaznziPracticeSheetGenerator-win32-x64/
+build/

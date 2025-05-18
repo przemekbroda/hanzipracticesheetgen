@@ -16,16 +16,16 @@ import {MatInput} from "@angular/material/input";
   selector: 'app-root',
   standalone: true,
   imports: [
-      CommonModule,
-      RouterOutlet,
-      FormsModule,
-      MatButton,
-      MatFormField,
-      MatInput,
-      MatLabel,
-      ReactiveFormsModule,
-      MatError,
-      MatHint
+    CommonModule,
+    RouterOutlet,
+    FormsModule,
+    MatButton,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    ReactiveFormsModule,
+    MatError,
+    MatHint
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
@@ -40,9 +40,9 @@ export class AppComponent {
   characterInfos!: Signal<Map<string, CharacterInfo>>
 
   constructor(
-      private http: HttpClient,
-      private formBuilder: FormBuilder,
-      characterInfoProvider: CharacterInfoProviderService
+    private http: HttpClient,
+    private formBuilder: FormBuilder,
+    characterInfoProvider: CharacterInfoProviderService
   ) {
     this.characterInfos = characterInfoProvider.characterInfos
   }
@@ -74,7 +74,7 @@ export class AppComponent {
           chars
             .map(c =>
               this.http
-                .get(`assets/${c.unicode}-still.svg`, { responseType: 'text' })
+                .get(`assets/${c.unicode}-still.svg`, {responseType: 'text'})
                 .pipe(map(svg => {
                   return {
                     svg: svg.replace("text {", "text {opacity: 0;\n"),
@@ -84,16 +84,16 @@ export class AppComponent {
             )
         )),
         map(svgsWithCharInfos => {
-          return  svgsWithCharInfos.map(sc => {
+          return svgsWithCharInfos.map(sc => {
             const strokes = sc.characterInfo.matches.map((_, index) => {
               let strokesDiagram = sc.svg
                 .replace(/fill:\s*#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3});/g, 'fill: #bcbcbc;');
 
-                for (let strokeNum = 0; strokeNum <= index; strokeNum++) {
-                  strokesDiagram = strokesDiagram.replace(`.stroke${strokeNum + 1} {fill: #bcbcbc;}`, `.stroke${index + 1} {fill: #000000;}`)
-                }
+              for (let strokeNum = 0; strokeNum <= index; strokeNum++) {
+                strokesDiagram = strokesDiagram.replace(`.stroke${strokeNum + 1} {fill: #bcbcbc;}`, `.stroke${index + 1} {fill: #000000;}`)
+              }
 
-                return strokesDiagram;
+              return strokesDiagram;
             })
 
             const characterSvgBlack = sc.svg
@@ -129,14 +129,14 @@ export class AppComponent {
             ]
           },
           //Signals that node should break page before, when any of the elements of the table is on the different page than other table nodes
-          pageBreakBefore: function(currentNode, _, __, ___) {
+          pageBreakBefore: function (currentNode, _, __, ___) {
             if (currentNode.table) {
               //initialize currentPage as -1
               let currentPage = -1;
               for (let i = 0; i < currentNode.table.body.length; i++) {
                 let tableCells = currentNode.table.body[i];
 
-                for (let j = 0; j < tableCells.length; j++ ) {
+                for (let j = 0; j < tableCells.length; j++) {
                   let tableCell = tableCells[j];
 
                   // @ts-ignore
@@ -167,7 +167,12 @@ export class AppComponent {
       });
   }
 
-  createCharacterTrainingSection(characterInfo: { strokesSvgs: string[], characterSvgBlack: string, characterSvgGray:string, characterInfo: CharacterInfo }): ContentTable {
+  createCharacterTrainingSection(characterInfo: {
+    strokesSvgs: string[],
+    characterSvgBlack: string,
+    characterSvgGray: string,
+    characterInfo: CharacterInfo
+  }): ContentTable {
     const strokesContentSvg = characterInfo.strokesSvgs.map(svg => {
       const contentSvg: TableCell = {
         svg: svg,
