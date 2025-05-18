@@ -2,6 +2,6 @@
 
 <div class="controls">
   <input type="text" [(ngModel)]="inputText">
-  <input type="checkbox" [(ngModel)]="includeTranslation" >
+  <input type="number" [(ngModel)]="trainingRows" min="1" max="13">
   <button (click)="generatePdf()">Generate</button>
 </div>

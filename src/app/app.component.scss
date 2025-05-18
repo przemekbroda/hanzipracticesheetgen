@@ -1,0 +1,14 @@
+.controls {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  gap: 1rem;
+}
+
+.controls input {
+  width: fit-content;
+}
+
+.controls button {
+  width: fit-content;
+}

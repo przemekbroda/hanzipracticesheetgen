@@ -17,32 +17,34 @@ import {FormsModule} from "@angular/forms";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  inputText: WritableSignal<string> = signal('');
-  includeTranslation: WritableSignal<boolean> = signal(false);
+  inputText = signal('');
   characterInfos!: Signal<Map<string, CharacterInfo>>
+  trainingRows = signal(1);
 
   constructor(private http: HttpClient, private characterInfoProvider: CharacterInfoProviderService) {
     this.characterInfos = characterInfoProvider.characterInfos
   }
 
   generatePdf() {
+    if (this.inputText().length === 0) {
+      return;
+    }
+
     const pdf = pdfMake;
     pdfMake.vfs = vfs;
 
     pdfMake.fonts = {
       NotoSans: {
-        normal: 'NotoSansJP-Black.ttf',
-        bold: 'NotoSansJP-Bold.ttf',
-        italics: 'NotoSansJP-ExtraLight.ttf',
-        bolditalics: 'NotoSansJP-Light.ttf'
+        normal: 'NotoSansJP-Regular.ttf',
+        bold: 'NotoSansJP-Regular.ttf',
+        italics: 'NotoSansJP-Regular.ttf',
+        bolditalics: 'NotoSansJP-Regular.ttf'
       }
     };
 
     const chars = Array.from(this.inputText())
       .filter(c => this.characterInfos().has(c))
       .map(c => this.characterInfos().get(c)!)
-
-    console.log(chars)
 
     of(chars)
       .pipe(
@@ -52,9 +54,8 @@ export class AppComponent {
               this.http
                 .get(`assets/${c.unicode}-still.svg`, { responseType: 'text' })
                 .pipe(map(svg => {
-                  svg.replace("text {", "text {opacity: 0;\n")
                   return {
-                    svg: svg,
+                    svg: svg.replace("text {", "text {opacity: 0;\n"),
                     characterInfo: c,
                   }
                 }))
@@ -89,9 +90,7 @@ export class AppComponent {
         })
       )
       .subscribe(strokesWithCharInfos => {
-
         strokesWithCharInfos.map(sc => this.createCharacterTrainingSection(sc))
-
 
         pdf.createPdf({
           defaultStyle: {
@@ -147,7 +146,6 @@ export class AppComponent {
   }
 
   createCharacterTrainingSection(characterInfo: { strokesSvgs: string[], characterSvgBlack: string, characterSvgGray:string, characterInfo: CharacterInfo }): ContentTable {
-    console.log(characterInfo)
     const strokesContentSvg = characterInfo.strokesSvgs.map(svg => {
       const contentSvg: TableCell = {
         svg: svg,
@@ -244,27 +242,37 @@ export class AppComponent {
             '',
             '',
           ],
-          [
-            {
-              svg: characterInfo.characterSvgGray,
-              width: 42,
-              height: 42,
-              alignment: 'center',
-            },
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-          ]
+          ...this.generateTrainingRows(characterInfo.characterSvgGray),
         ]
       }
     };
 
     return contentTable;
+  }
+
+  private generateTrainingRows(characterSvgGray: string): Array<Array<TableCell>> {
+    const arr: Array<Array<TableCell>> = [];
+
+    for (let i = 0; i < this.trainingRows(); i++) {
+      arr.push([
+        {
+          svg: `${characterSvgGray}`,
+          width: 42,
+          height: 42,
+          alignment: 'center',
+        },
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+      ])
+    }
+
+    return arr;
   }
 }
