@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  app-region: drag;
+}
+
+button {
+  app-region: no-drag;
+}
+
+.titlebar {
+  user-select: none;
+  app-region: drag;
+}
+
+input {
+  app-region: no-drag;
+}

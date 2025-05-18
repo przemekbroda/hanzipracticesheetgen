@@ -7,9 +7,17 @@ let appWindow
 
 function createWindow () {
   appWindow = new BrowserWindow({
-    width: 800,
+    width: 600,
     height: 600,
+    title: 'Hanzi Practice Sheet Generator',
+    titleBarStyle: 'hidden',
+    ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {}),
+    webPreferences: {
+      nodeIntegration: true,
+    },
   })
+
+  appWindow.removeMenu();
 
   appWindow.loadFile('dist/hanzi-practice-sheet-gen/browser/index.html')
 
