@@ -1,8 +1,24 @@
-<p>Welcome to Hanzi Practice Sheet generator</p>
-
-<div class="controls">
-  <input type="text" [(ngModel)]="inputText">
-  <input type="text" [(ngModel)]="footerText">
-  <input type="number" [(ngModel)]="trainingRows" min="1" max="13">
-  <button (click)="generatePdf()">Generate</button>
-</div>
+<form class="controls" [formGroup]="form">
+    <p>Welcome to Hanzi Practice Sheet generator</p>
+    <mat-form-field>
+        <mat-label>Characters</mat-label>
+        <input matInput placeholder="你好" type="text" formControlName="characters">
+        <mat-hint>Provide characters in one sentence ex. 我是工程师你好睡觉</mat-hint>
+        @if (form.controls.characters.invalid) {
+            <mat-error>Provide at least one character</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Footer text</mat-label>
+        <input matInput placeholder="Created by John Doe" type="text" formControlName="footer">
+        <mat-hint>Optional field. Provided text will appear at the bottom on each page</mat-hint>
+    </mat-form-field>
+    <mat-form-field class="number-input">
+        <mat-label>Rows per character</mat-label>
+        <input matInput type="number" formControlName="trainingRows" min="1" max="13">
+        @if (form.controls.trainingRows.invalid) {
+            <mat-error>Rows per character must be between 1 and 13</mat-error>
+        }
+    </mat-form-field>
+    <button mat-raised-button color="primary" [disabled]="form.invalid" type="submit" (click)="generatePdf()">Generate PDF File</button>
+</form>

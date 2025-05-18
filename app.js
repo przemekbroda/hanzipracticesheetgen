@@ -7,7 +7,7 @@ let appWindow
 
 function createWindow () {
   appWindow = new BrowserWindow({
-    width: 600,
+    width: 800,
     height: 600,
     title: 'Hanzi Practice Sheet Generator',
     titleBarStyle: 'hidden',

@@ -1,8 +1,9 @@
 .controls {
   display: flex;
   flex-direction: column;
-  width: fit-content;
-  gap: 1rem;
+  width: 43em;
+  gap: 1em;
+  padding: 2em;
 }
 
 .controls input {
@@ -11,4 +12,8 @@
 
 .controls button {
   width: fit-content;
+}
+
+.number-input {
+    width: 20em;
 }

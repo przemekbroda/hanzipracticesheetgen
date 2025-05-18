@@ -1,33 +1,54 @@
-import {Component, Signal, signal, WritableSignal} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import {Component, Signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterOutlet} from '@angular/router';
 import {CharacterInfoProviderService} from "./services/character-info-provider.service";
 import {CharacterInfo} from "./models/characterInfo";
 import {HttpClient} from "@angular/common/http";
 import pdfMake from "pdfmake/build/pdfmake";
 import {forkJoin, map, of, switchMap} from "rxjs";
 import {ContentTable, TableCell} from "pdfmake/interfaces";
-import {FormsModule} from "@angular/forms";
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MatButton} from "@angular/material/button";
+import {MatError, MatFormField, MatHint, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, FormsModule],
+  imports: [
+      CommonModule,
+      RouterOutlet,
+      FormsModule,
+      MatButton,
+      MatFormField,
+      MatInput,
+      MatLabel,
+      ReactiveFormsModule,
+      MatError,
+      MatHint
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  inputText = signal('');
-  footerText = signal('');
-  characterInfos!: Signal<Map<string, CharacterInfo>>
-  trainingRows = signal(1);
+  form = this.formBuilder.group({
+    characters: ['', [Validators.required, Validators.minLength(1)]],
+    footer: [''],
+    trainingRows: [1, [Validators.min(1), Validators.max(13)]],
+  });
 
-  constructor(private http: HttpClient, private characterInfoProvider: CharacterInfoProviderService) {
+  characterInfos!: Signal<Map<string, CharacterInfo>>
+
+  constructor(
+      private http: HttpClient,
+      private formBuilder: FormBuilder,
+      characterInfoProvider: CharacterInfoProviderService
+  ) {
     this.characterInfos = characterInfoProvider.characterInfos
   }
 
   generatePdf() {
-    if (this.inputText().length === 0) {
+    if (this.form.invalid) {
       return;
     }
 
@@ -43,11 +64,11 @@ export class AppComponent {
       }
     };
 
-    const chars = Array.from(this.inputText())
+    const characterInfos = Array.from(this.form.value.characters ?? '')
       .filter(c => this.characterInfos().has(c))
-      .map(c => this.characterInfos().get(c)!)
+      .map(c => this.characterInfos().get(c)!);
 
-    of(chars)
+    of(characterInfos)
       .pipe(
         switchMap(chars => forkJoin(
           chars
@@ -101,14 +122,14 @@ export class AppComponent {
             columns: [
               '',
               {
-                text: this.footerText(),
+                text: this.form.value.footer!,
                 fontSize: 10,
                 alignment: 'center',
               }
             ]
           },
           //Signals that node should break page before, when any of the elements of the table is on the different page than other table nodes
-          pageBreakBefore: function(currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
+          pageBreakBefore: function(currentNode, _, __, ___) {
             if (currentNode.table) {
               //initialize currentPage as -1
               let currentPage = -1;
@@ -174,8 +195,7 @@ export class AppComponent {
       chunkedStrokesContentSvgs.push(chunk);
     }
 
-
-    const contentTable: ContentTable = {
+    return {
       headlineLevel: 1,
       table: {
         widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
@@ -248,14 +268,12 @@ export class AppComponent {
         ]
       }
     };
-
-    return contentTable;
   }
 
   private generateTrainingRows(characterSvgGray: string): Array<Array<TableCell>> {
     const arr: Array<Array<TableCell>> = [];
 
-    for (let i = 0; i < this.trainingRows(); i++) {
+    for (let i = 0; i < (this.form.value.trainingRows ?? 1); i++) {
       arr.push([
         {
           svg: `${characterSvgGray}`,
